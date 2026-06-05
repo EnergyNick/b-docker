@@ -269,11 +269,11 @@ build-base: ensure-defaults build-base-cli build-base-fpm
 
 build-base-cli:
 	docker build --build-arg UGN=$(UGN) --build-arg UID=$(UID) --build-arg GID=$(GID)  --build-arg ENVIRONMENT=$(ENVIRONMENT)  --build-arg DEBUG=$(DEBUG) \
-		-t my/php-base-cli:$(PHP_VERSION) -f docker/php/base/cli/$(PHP_VERSION)/Dockerfile .
+		--network=host -t my/php-base-cli:$(PHP_VERSION) -f docker/php/base/cli/$(PHP_VERSION)/Dockerfile .
 
 build-base-fpm:
 	docker build --build-arg UGN=$(UGN) --build-arg UID=$(UID) --build-arg GID=$(GID)  --build-arg ENVIRONMENT=$(ENVIRONMENT)  --build-arg DEBUG=$(DEBUG) \
-		-t my/php-base-fpm:$(PHP_VERSION) -f docker/php/base/fpm/$(PHP_VERSION)/Dockerfile .
+		--network=host -t my/php-base-fpm:$(PHP_VERSION) -f docker/php/base/fpm/$(PHP_VERSION)/Dockerfile .
 
 docker-network-create:
 	@if ! docker network inspect $(NETWORK_NAME) >/dev/null 2>&1; then \
