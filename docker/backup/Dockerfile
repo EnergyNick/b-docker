@@ -3,6 +3,8 @@
 ARG MYSQL_IMAGE=mysql:8.4
 FROM ${MYSQL_IMAGE}
 
+USER root
+
 ARG TZ=UTC
 
 # Install cron and utilities
@@ -29,5 +31,6 @@ COPY docker/backup/docker-entrypoint.sh /docker-entrypoint.sh
 # Set permissions
 RUN chmod +x /scripts/*.sh /docker-entrypoint.sh
 
+USER mysql
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["cron"]
