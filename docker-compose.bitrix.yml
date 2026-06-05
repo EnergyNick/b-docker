@@ -150,6 +150,7 @@ services:
     hostname: ${DOMAIN}
     build:
       context: .
+      network: host
       dockerfile: docker/php/bitrix/Dockerfile
       args:
         PHP_VERSION: ${PHP_VERSION:-8.3}
@@ -283,6 +284,7 @@ services:
     hostname: ${DOMAIN}
     build:
       context: .
+      network: host
       dockerfile: docker/php/php-fpm/Dockerfile
       args:
         PHP_VERSION: ${PHP_VERSION:-8.3}
@@ -379,6 +381,7 @@ services:
     hostname: ${DOMAIN}
     build:
       context: .
+      network: host
       dockerfile: docker/php/php-cli/Dockerfile
       args:
         PHP_VERSION: ${PHP_VERSION:-8.3}
@@ -462,6 +465,7 @@ services:
     hostname: ${DOMAIN}
     build:
       context: .
+      network: host
       dockerfile: docker/php/cron/Dockerfile
       args:
         PHP_VERSION: ${PHP_VERSION:-8.3}
@@ -540,6 +544,7 @@ services:
     hostname: ${DOMAIN}
     build:
       context: .
+      network: host
       dockerfile: docker/php/supervisor/Dockerfile
       args:
         PHP_VERSION: ${PHP_VERSION:-8.3}
@@ -617,6 +622,7 @@ services:
     hostname: nginx
     build:
       context: .
+      network: host
       dockerfile: docker/nginx/Dockerfile
       args:
         TZ: ${TZ}
@@ -803,6 +809,7 @@ services:
     container_name: ${DOMAIN}_redis
     build:
       context: .
+      network: host
       dockerfile: docker/redis/Dockerfile
       args:
         TZ: ${TZ}
@@ -956,6 +963,7 @@ services:
     container_name: ${DOMAIN}_memcached
     build:
       context: .
+      network: host
       dockerfile: docker/memcached/Dockerfile
       args:
         TZ: ${TZ}
@@ -1016,6 +1024,7 @@ services:
     hostname: rabbitmq
     build:
       context: .
+      network: host
       dockerfile: docker/rabbitmq/Dockerfile
       args:
         TZ: ${TZ}
@@ -1061,6 +1070,7 @@ services:
     container_name: ${DOMAIN}_mailhog
     build:
       context: .
+      network: host
       dockerfile: docker/mailhog/Dockerfile
 
     environment:
@@ -1425,6 +1435,7 @@ services:
     container_name: ${DOMAIN}_backup
     build:
       context: .
+      network: host
       dockerfile: docker/backup/Dockerfile
       args:
         MYSQL_IMAGE: ${MYSQL_IMAGE:-mysql:8.4}
@@ -1467,6 +1478,7 @@ services:
     container_name: ${DOMAIN}_fail2ban
     build:
       context: .
+      network: host
       dockerfile: docker/fail2ban/Dockerfile
 
     environment:
