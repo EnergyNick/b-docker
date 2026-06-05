@@ -533,6 +533,9 @@ http {
     # CORS origin validation map (required by snippets/cors.conf)
     include /etc/nginx/snippets/cors-map.conf;
 
+    # Rate limiting zones (applied via limit_req in bitrix.conf)
+    include /etc/nginx/snippets/rate-limit.conf;
+
     # Performance: File cache
     open_file_cache max=10000 inactive=60s;
     open_file_cache_valid 120s;
@@ -568,12 +571,12 @@ http {
     gzip_http_version 1.0;
     gzip_comp_level ${gzip_level};
     gzip_min_length 1100;
-    gzip_buffers 16 8k;
+    gzip_buffers 64 8k;
     gzip_proxied any;
     gzip_types
         text/plain text/css text/xml text/javascript
         application/javascript application/json application/xml
-        application/rss+xml application/atom+xml
+        application/rss+xml application/atom+xml 
         font/truetype font/opentype application/vnd.ms-fontobject
         image/svg+xml image/x-icon;
     gzip_static on;
@@ -588,14 +591,16 @@ http {
         application/javascript application/json application/xml
         application/rss+xml application/atom+xml
         image/svg+xml;
+    brotli_buffers 16 8k;
     brotli_comp_level 6;
+    brotli_window 512k;
     brotli_min_length 20;
 
-    # Client
+    # Client buffers (Bitrix official: larger buffers for heavy forms)
     client_max_body_size 1024M;
-    client_body_buffer_size 128k;
-    client_header_buffer_size 1k;
-    large_client_header_buffers 4 16k;
+    client_body_buffer_size 512k;
+    client_header_buffer_size 512k;
+    large_client_header_buffers 4 64k;
 
     # FastCGI
     proxy_connect_timeout 60s;
