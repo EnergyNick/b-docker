@@ -242,9 +242,7 @@ EOFSCRIPT
         echo "[ssl] Looking for certificates in: $SSL_PATH/$DOMAIN/"
 
         # Skip template generation if per-site config exists in sites-enabled
-        if [ -f "/etc/nginx/sites-enabled/${DOMAIN}.conf" ]; then
-            echo "[ssl] Per-site config found for $DOMAIN, skipping template generation"
-        elif [ -f "$SSL_PATH/$DOMAIN/$SSL_KEY" ] && [ -f "$SSL_PATH/$DOMAIN/$SSL_PRIV_KEY" ]; then
+        if [ -f "$SSL_PATH/$DOMAIN/$SSL_KEY" ] && [ -f "$SSL_PATH/$DOMAIN/$SSL_PRIV_KEY" ]; then
             CERT_PATH="$SSL_PATH/$DOMAIN/$SSL_KEY"
             KEY_PATH="$SSL_PATH/$DOMAIN/$SSL_PRIV_KEY"
 
@@ -261,12 +259,16 @@ EOFSCRIPT
                 REDIRECT_NAME=""
             fi
 
-            export CERT_PATH KEY_PATH CANONICAL_HOST CANONICAL_NAME REDIRECT_NAME
-            envsubst < "$TEMPLATE_DIR/ssl_site.conf.tmpl" > "$CONF_DIR/ssl_$DOMAIN.conf"
+            if [ -f "/etc/nginx/sites-enabled/${DOMAIN}.conf" ]; then
+                echo "[ssl] Per-site config found for $DOMAIN, skipping template generation"
+            else
 
-            # Append redirect server block if needed
-            if [ -n "$REDIRECT_NAME" ]; then
-                cat >> "$CONF_DIR/ssl_$DOMAIN.conf" << REDIRECT_EOF
+                export CERT_PATH KEY_PATH CANONICAL_HOST CANONICAL_NAME REDIRECT_NAME
+                envsubst < "$TEMPLATE_DIR/ssl_site.conf.tmpl" > "$CONF_DIR/ssl_$DOMAIN.conf"
+
+                # Append redirect server block if needed
+                if [ -n "$REDIRECT_NAME" ]; then
+                    cat >> "$CONF_DIR/ssl_$DOMAIN.conf" << REDIRECT_EOF
 # Redirect non-canonical HTTPS to canonical
 server {
     listen 443 ssl;
@@ -279,15 +281,16 @@ server {
     return 301 https://${CANONICAL_NAME}\$request_uri;
 }
 REDIRECT_EOF
-            fi
+                fi
 
-            # Remove placeholder from template output
-            sed -i 's/# REDIRECT_BLOCK_PLACEHOLDER//' "$CONF_DIR/ssl_$DOMAIN.conf"
+                # Remove placeholder from template output
+                sed -i 's/# REDIRECT_BLOCK_PLACEHOLDER//' "$CONF_DIR/ssl_$DOMAIN.conf"
 
-            # Remove HTTP-only config (replaced by SSL config with HTTP redirect)
-            if [ -f "$CONF_DIR/$DOMAIN.conf" ]; then
-                echo "[ssl] Removing HTTP-only config: $DOMAIN.conf (replaced by SSL config)"
-                rm -f "$CONF_DIR/$DOMAIN.conf"
+                # Remove HTTP-only config (replaced by SSL config with HTTP redirect)
+                if [ -f "$CONF_DIR/$DOMAIN.conf" ]; then
+                    echo "[ssl] Removing HTTP-only config: $DOMAIN.conf (replaced by SSL config)"
+                    rm -f "$CONF_DIR/$DOMAIN.conf"
+                fi
             fi
 
             if [ "$GRAFANA_CONFIG" = "1" ]; then
