@@ -290,6 +290,16 @@ REDIRECT_EOF
                 rm -f "$CONF_DIR/$DOMAIN.conf"
             fi
 
+            if [ "$GRAFANA_CONFIG" = "1" ]; then
+                SUBDOMAIN="${GRAFANA_SUBDOMAIN:-grafana}"
+                DOMAIN_STRING="$SUBDOMAIN.$DOMAIN"
+                echo "[ssl] Processing subdomain: $DOMAIN_STRING"
+                export CERT_PATH KEY_PATH GRAFANA_SUBDOMAIN="$SUBDOMAIN"
+                envsubst < "$TEMPLATE_DIR/ssl_grafana.conf.tmpl" > "$CONF_DIR/ssl_$DOMAIN_STRING.conf"
+                echo "[ssl] Created nginx config: ssl_$DOMAIN_STRING.conf"
+                sleep 2
+            fi
+
             echo "[ssl] Loaded custom certificates for $DOMAIN (canonical: $CANONICAL_NAME)"
             reload_nginx
         else
