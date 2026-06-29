@@ -90,7 +90,7 @@
       "pluginVersion": "8.0.0",
       "targets": [
         {
-          "expr": "sum(count_over_time({job=\"bitrix\",filename=~\".*/php/error.log\"} |~ \"(?i)(error|warning|fatal)\" [$__interval]))",
+          "expr": "sum(count_over_time({job=\"bitrix\",filename=~\".*/php/error.log\"} |~ \"(?i)(?P<level>error|warning|fatal)\" [$__interval]))",
           "refId": "A",
           "legendFormat": "PHP Errors"
         }
@@ -322,7 +322,7 @@
       "pluginVersion": "8.0.0",
       "targets": [
         {
-          "expr": "sum(count_over_time({job=\"bitrix\",filename=~\".*/php/error.log\"} |~ \"(?i)(deprecated|notice)\" [5m]))",
+          "expr": "sum(count_over_time({job=\"bitrix\",filename=~\".*/php/error.log\"} |~ \"(?i)(?P<type>deprecated|notice)\" [5m]))",
           "refId": "A",
           "legendFormat": "Notices/Deprecated (5m)"
         }
@@ -352,7 +352,7 @@
       "pluginVersion": "8.0.0",
       "targets": [
         {
-          "expr": "{job=\"bitrix\",filename=~\".*/php/error.log\"} |~ \"(?i)(fatal|error)\" !~ \"(?i)(deprecated|notice)\"",
+          "expr": "{job=\"bitrix\",filename=~\".*/php/error.log\"} |~ \"(?i)(?P<level>fatal|error)\" !~ \"(?i)(?P<type>deprecated|notice)\"",
           "refId": "A",
           "legendFormat": ""
         }
@@ -412,7 +412,7 @@
       "pluginVersion": "8.0.0",
       "targets": [
         {
-          "expr": "{job=\"bitrix\",filename=~\".*/php/error.log\"} |~ \"(?i)(deprecated|notice)\"",
+          "expr": "{job=\"bitrix\",filename=~\".*/php/error.log\"} |~ \"(?i)(?P<level>deprecated|notice)\"",
           "refId": "A",
           "legendFormat": ""
         }
@@ -500,7 +500,7 @@
       "pluginVersion": "8.0.0",
       "targets": [
         {
-          "expr": "topk(10, sum by (filename) (count_over_time({job=\"bitrix\",filename=~\".*/php/.*\"} |~ \"(?i)(error|warning|fatal)\" [1h])))",
+          "expr": "topk(10, sum by (filename) (count_over_time({job=\"bitrix\",filename=~\".*/php/.*\"} |~ \"(?i)(?P<level>error|warning|fatal)\" [1h])))",
           "refId": "A",
           "legendFormat": "{{filename}}"
         }

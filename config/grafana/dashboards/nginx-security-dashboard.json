@@ -121,12 +121,12 @@
       },
       "targets": [
         {
-          "expr": "sum(rate({job=\"nginx\"} | regexp \"\\\\s+(200|201|202|204|301|302|304)\\\\s+\" [5m]))",
+          "expr": "sum(rate({job=\"nginx\"} | regexp \"\\\\s+(?P<status>200|201|202|204|301|302|304)\\\\s+\" [5m]))",
           "refId": "A",
           "legendFormat": "Normal Traffic"
         },
         {
-          "expr": "sum(rate({job=\"nginx\"} | regexp \"\\\\s+(403|404|429|444|500|502|503)\\\\s+\" [5m]))",
+          "expr": "sum(rate({job=\"nginx\"} | regexp \"\\\\s+(?P<status>403|404|429|444|500|502|503)\\\\s+\" [5m]))",
           "refId": "B",
           "legendFormat": "Suspicious Traffic"
         }
@@ -188,7 +188,7 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "sum(count_over_time({job=\"nginx\"} | regexp \"\\\\s+403\\\\s+\" [1h]))",
+          "expr": "sum(count_over_time({job=\"nginx\"} | regexp \"\\\\s+(?P<status>403)\\\\s+\" [1h]))",
           "refId": "A"
         }
       ],
@@ -249,7 +249,7 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "sum(count_over_time({job=\"nginx\"} | regexp \"\\\\s+404\\\\s+\" [1h]))",
+          "expr": "sum(count_over_time({job=\"nginx\"} | regexp \"\\\\s+(?P<status>404)\\\\s+\" [1h]))",
           "refId": "A"
         }
       ],
@@ -310,7 +310,7 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "sum(count_over_time({job=\"nginx\"} | regexp \"\\\\s+429\\\\s+\" [1h]))",
+          "expr": "sum(count_over_time({job=\"nginx\"} | regexp \"\\\\s+(?P<status>429)\\\\s+\" [1h]))",
           "refId": "A"
         }
       ],
@@ -371,7 +371,7 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "sum(count_over_time({job=\"nginx\"} | regexp \"\\\\s+5[0-9][0-9]\\\\s+\" [1h]))",
+          "expr": "sum(count_over_time({job=\"nginx\"} | regexp \"\\\\s+(?P<status>5[0-9][0-9])\\\\s+\" [1h]))",
           "refId": "A"
         }
       ],
@@ -531,7 +531,7 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "topk(10, sum by (user_agent) (count_over_time({job=\"nginx\"} | regexp \"\\\"(?P<user_agent>[^\\\"]+)\\\"$\" | regexp \"(bot|spider|crawler|scan|curl|wget|python|java|libwww|nikto|sqlmap|masscan|nmap)\" [6h])))",
+          "expr": "topk(10, sum by (user_agent) (count_over_time({job=\"nginx\"} | regexp \"\\\"(?P<user_agent>[^\\\"]+)\\\"$\" | regexp \"(?P<type>bot|spider|crawler|scan|curl|wget|python|java|libwww|nikto|sqlmap|masscan|nmap)\" [6h])))",
           "refId": "A"
         }
       ],
@@ -615,7 +615,7 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "topk(10, sum by (uri) (count_over_time({job=\"nginx\"} | regexp \"\\\"\\\\w+\\\\s+(?P<uri>[^\\\\s]+).*\\\"\\\\s+(?P<status>403|404)\" | regexp \"(admin|wp-|wordpress|phpmyadmin|\\\\.php|\\\\.asp|\\\\.aspx|config\\\\.|\\\\.(env|git|sql|backup|bak|old|tar|zip)|install|setup|test)\" [6h])))",
+          "expr": "topk(10, sum by (uri) (count_over_time({job=\"nginx\"} | regexp \"\\\"\\\\w+\\\\s+(?P<uri>[^\\\\s]+).*\\\"\\\\s+(?P<status>403|404)\" | regexp \"(?P<type>admin|wp-|wordpress|phpmyadmin|\\\\.php|\\\\.asp|\\\\.aspx|config\\\\.|\\\\.(?P<private_type>env|git|sql|backup|bak|old|tar|zip)|install|setup|test)\" [6h])))",
           "refId": "A"
         }
       ],

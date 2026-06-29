@@ -95,7 +95,7 @@
           "legendFormat": "Fail2ban Bans/sec"
         },
         {
-          "expr": "sum(rate({job=\"nginx\"} | regexp \"(?P<ip>\\\\d+\\\\.\\\\d+\\\\.\\\\d+\\\\.\\\\d+).*\\\\s+(403|429|444)\\\\s+\" [5m])) by (container_name)",
+          "expr": "sum(rate({job=\"nginx\"} | regexp \"(?P<ip>\\\\d+\\\\.\\\\d+\\\\.\\\\d+\\\\.\\\\d+).*\\\\s+(?P<status>403|429|444)\\\\s+\" [5m])) by (container_name)",
           "refId": "B",
           "legendFormat": "Blocked Requests/sec"
         }
@@ -433,7 +433,7 @@
       "pluginVersion": "8.3.3",
       "targets": [
         {
-          "expr": "topk(10, sum by (ip) (count_over_time({job=\"nginx\"} | regexp \"(?P<ip>\\\\d+\\\\.\\\\d+\\\\.\\\\d+\\\\.\\\\d+).*\\\\s+(403|404|429|444)\\\\s+\" [6h])))",
+          "expr": "topk(10, sum by (ip) (count_over_time({job=\"nginx\"} | regexp \"(?P<ip>\\\\d+\\\\.\\\\d+\\\\.\\\\d+\\\\.\\\\d+).*\\\\s+(?P<status>403|404|429|444)\\\\s+\" [6h])))",
           "refId": "A"
         }
       ],
