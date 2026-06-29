@@ -240,6 +240,7 @@ services:
       - SETGID
       - FOWNER
       - DAC_OVERRIDE
+      - SYS_PTRACE
     tmpfs:
       - /tmp:noexec,nodev,nosuid
       - /var/tmp:noexec,nodev,nosuid
